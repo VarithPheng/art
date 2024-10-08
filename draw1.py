@@ -1,5 +1,41 @@
 import turtle
 
+def draw_crown(t, x, y, scale=1):
+    t.penup()
+    t.goto(x - (37.5 * scale), y + (48 * scale))
+    t.pendown()
+    t.setheading(0)
+    
+    # Set crown color to yellow
+    t.pencolor("gold")
+    t.fillcolor("yellow")
+    
+    # Draw and fill the rectangular base
+    t.begin_fill()
+    for _ in range(2):
+        t.forward(75 * scale)
+        t.left(90)
+        t.forward(12.5 * scale)
+        t.left(90)
+    t.end_fill()
+
+    # Draw and fill the peaks without bottom lines
+    peak_positions = [-37.5, -12.5, 12.5]
+    for peak_x in peak_positions:
+        t.penup()
+        t.goto(x + (peak_x * scale), y + (60.5 * scale))
+        t.pendown()
+        t.begin_fill()
+        t.setheading(60)
+        t.forward(25 * scale)
+        t.right(120)
+        t.forward(25 * scale)
+        t.end_fill()
+
+    t.hideturtle()
+
+# ... rest of the code remains unchanged ...
+    
 def draw_stickman(x, y, scale=1.2, winner=False):
     t = turtle.Turtle()
     t.penup()
@@ -33,30 +69,10 @@ def draw_stickman(x, y, scale=1.2, winner=False):
     if winner:
         t.right(60)  # Adjust angle for the second arm
     t.forward(48 * scale)
-    
-    # Draw winner's crown if winner
     if winner:
-        t.penup()
-        t.goto(x - 24 * scale, y + 48 * scale)  # Adjusted position
-        t.pendown()
-        t.color("gold")
-        t.pensize(2)  # Thin line for the crown
-        
-        # Draw the crown with three dips
-        t.setheading(0)
-        t.forward(48 * scale)  # Bottom of the crown
-        for _ in range(3):
-            t.left(120)
-            t.forward(16 * scale)
-            t.right(120)
-            t.forward(16 * scale)
-            t.left(120)
-            t.forward(16 * scale)
-        t.forward(48 * scale)  # Complete the bottom line
+        draw_crown(t, x, y, scale * 1.3)
     
     t.hideturtle()
-
-# ... (rest of the code remains the same)
 
 def draw_chess_table(x, y, scale=1.2):
     t = turtle.Turtle()
@@ -94,18 +110,18 @@ screen = turtle.Screen()
 screen.setup(600, 480)
 screen.title("Stickman Chess - Player 1 Wins")
 
-# Turn off animation
-turtle.tracer(0, 0)
+# Disable animation
+screen.tracer(0)
 
 # Draw chess table
 draw_chess_table(-48, -144)
 
 # Draw stickmen
-draw_stickman(-180, -60, winner=True)  # First person wins with raised arm
-draw_stickman(180, -60)  # Second person loses
+draw_stickman(-180, -60, scale=1, winner=True)
+draw_stickman(180, -60, scale=1)
 
-# Update the screen
-turtle.update()
+# Update the screen to show drawings
+screen.update()
 
 # Keep the window open
 turtle.done()

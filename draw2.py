@@ -1,11 +1,46 @@
 import turtle
 
+def draw_crown(t, x, y, scale=1):
+    t.penup()
+    t.goto(x - (37.5 * scale), y + (48 * scale))
+    t.pendown()
+    t.setheading(0)
+    
+    # Set crown color to yellow
+    t.pencolor("gold")
+    t.fillcolor("yellow")
+    
+    # Draw and fill the rectangular base
+    t.begin_fill()
+    for _ in range(2):
+        t.forward(75 * scale)
+        t.left(90)
+        t.forward(12.5 * scale)
+        t.left(90)
+    t.end_fill()
+
+    # Draw and fill the peaks without bottom lines
+    peak_positions = [-37.5, -12.5, 12.5]
+    for peak_x in peak_positions:
+        t.penup()
+        t.goto(x + (peak_x * scale), y + (60.5 * scale))
+        t.pendown()
+        t.begin_fill()
+        t.setheading(60)
+        t.forward(25 * scale)
+        t.right(120)
+        t.forward(25 * scale)
+        t.end_fill()
+
+    t.hideturtle()
+
+# ... rest of the code remains unchanged ...
+    
 def draw_stickman(x, y, scale=1.2, winner=False):
     t = turtle.Turtle()
     t.penup()
     t.goto(x, y)
     t.pendown()
-    t.speed(0)  # Fastest drawing speed
     
     # Draw head
     t.circle(24 * scale)
@@ -34,22 +69,13 @@ def draw_stickman(x, y, scale=1.2, winner=False):
     if winner:
         t.right(60)  # Adjust angle for the second arm
     t.forward(48 * scale)
-    
-    # Draw winner's crown if winner
     if winner:
-        t.penup()
-        t.goto(x - 24 * scale, y + 48 * scale)
-        t.pendown()
-        t.color("gold")
-        for _ in range(3):
-            t.forward(16 * scale)
-            t.right(120)
+        draw_crown(t, x, y, scale * 1.3)
     
     t.hideturtle()
 
 def draw_chess_table(x, y, scale=1.2):
     t = turtle.Turtle()
-    t.speed(0)  # Fastest drawing speed
     t.penup()
     t.goto(x, y)
     t.pendown()
@@ -84,12 +110,18 @@ screen = turtle.Screen()
 screen.setup(600, 480)
 screen.title("Stickman Chess - Player 1 Wins")
 
+# Disable animation
+screen.tracer(0)
+
 # Draw chess table
 draw_chess_table(-48, -144)
 
 # Draw stickmen
-draw_stickman(-180, -60)  # First person wins with raised arm
-draw_stickman(180, -60,winner=True)  # Second person loses
+draw_stickman(-180, -60, scale=1)
+draw_stickman(180, -60, scale=1, winner=True)
+
+# Update the screen to show drawings
+screen.update()
 
 # Keep the window open
 turtle.done()
